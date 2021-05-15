@@ -1,5 +1,5 @@
-use scraper::{Html, Selector};
 use prettytable::{Cell, Row, Table};
+use scraper::{Html, Selector};
 
 pub fn get(document: &Html) {
     let info_selector = Selector::parse(".rows-wrapper > div > div").unwrap();
@@ -13,9 +13,7 @@ pub fn get(document: &Html) {
         let first_row = element.select(&first_row_selector).next().unwrap();
         let second_row = element.select(&second_row_selector).next().unwrap();
         let name = second_row.inner_html();
-        first_row_vec.push(Cell::new(
-            format!("\x1b[0;34m{}\x1b[0m", name).as_str()
-        ));
+        first_row_vec.push(Cell::new(format!("\x1b[0;34m{}\x1b[0m", name).as_str()));
         second_row_vec.push(Cell::new(first_row.text().collect::<String>().trim()));
     }
 

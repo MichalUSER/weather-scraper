@@ -1,5 +1,5 @@
-use scraper::{Html, Selector};
 use prettytable::{Cell, Row, Table};
+use scraper::{Html, Selector};
 
 pub fn get(document: &Html) {
     let vsetky_dni_selector = Selector::parse(".fcast-table-tabs > ul > li > a").unwrap();
@@ -20,7 +20,7 @@ pub fn get(document: &Html) {
                 den.text().collect::<String>().trim(),
                 datum.text().collect::<String>().trim()
             )
-            .to_string()
+            .to_string(),
         ));
         second_row.push(Cell::new(teplota.text().collect::<String>().trim()));
     }
