@@ -1,7 +1,9 @@
 use prettytable::{Cell, Row, Table};
-use scraper::{Html, Selector};
+use scraper::{ElementRef, Html, Selector};
 
-// Check if it rains etc
+fn to_cell(e: &ElementRef) -> Cell {
+    Cell::new(e.text().collect::<String>().as_str())
+}
 
 pub fn get(document: &Html) {
     let table_selector =
@@ -17,37 +19,38 @@ pub fn get(document: &Html) {
     )
     .unwrap();
 
-    let first_row: Vec<Cell> = vec![
+    let first_row = vec![
         Cell::new(""),
-        Cell::new("\x1b[0;34m2:00\x1b[0m"),
-        Cell::new("\x1b[0;34m5:00\x1b[0m"),
-        Cell::new("\x1b[0;34m8:00\x1b[0m"),
-        Cell::new("\x1b[0;34m11:00\x1b[0m"),
-        Cell::new("\x1b[0;34m14:00\x1b[0m"),
-        Cell::new("\x1b[0;34m17:00\x1b[0m"),
-        Cell::new("\x1b[0;34m20:00\x1b[0m"),
-        Cell::new("\x1b[0;34m23:00\x1b[0m"),
+        Cell::new("\x1b[0;34m2:00"),
+        Cell::new("\x1b[0;34m5:00"),
+        Cell::new("\x1b[0;34m8:00"),
+        Cell::new("\x1b[0;34m11:00"),
+        Cell::new("\x1b[0;34m14:00"),
+        Cell::new("\x1b[0;34m17:00"),
+        Cell::new("\x1b[0;34m20:00"),
+        Cell::new("\x1b[0;34m23:00"),
     ];
-    let mut second_row: Vec<Cell> = vec![Cell::new("\x1b[0;34mTeplota\x1b[0m")];
-    let mut third_row: Vec<Cell> = vec![Cell::new("\x1b[0;34mPocitová teplota\x1b[0m")];
-    let mut fourth_row: Vec<Cell> = vec![Cell::new("\x1b[0;34mRiziko zrážok\x1b[0m")];
-    let mut fifth_row: Vec<Cell> = vec![Cell::new("\x1b[0;34mÚhrn zrážok\x1b[0m")];
-    let mut sixth_row: Vec<Cell> = vec![Cell::new("\x1b[0;34mOblačnosť\x1b[0m")];
-    let mut seventh_row: Vec<Cell> = vec![Cell::new("\x1b[0;34mRýchlosť vetra\x1b[0m")];
-    let mut eighth_row: Vec<Cell> = vec![Cell::new("\x1b[0;34mRelatívna vlhkosť\x1b[0m")];
+    // Fix this
+    let mut second_row = vec![Cell::new("\x1b[0;34mTeplota")];
+    let mut third_row = vec![Cell::new("\x1b[0;34mPocitová teplota")];
+    let mut fourth_row = vec![Cell::new("\x1b[0;34mRiziko zrážok")];
+    let mut fifth_row = vec![Cell::new("\x1b[0;34mÚhrn zrážok")];
+    let mut sixth_row = vec![Cell::new("\x1b[0;34mOblačnosť")];
+    let mut seventh_row = vec![Cell::new("\x1b[0;34mRýchlosť vetra")];
+    let mut eighth_row = vec![Cell::new("\x1b[0;34mRelatívna vlhkosť")];
 
     for col in document.select(&table_selector) {
         for (index, info) in col.select(&multiple_col).enumerate() {
             // Make a function that adds text to a row
-            // Make it not repetitive
+            let info_cell = to_cell(&info);
             match index {
-                0 => second_row.push(Cell::new(info.text().collect::<String>().as_str())),
-                1 => third_row.push(Cell::new(info.text().collect::<String>().as_str())),
-                2 => fourth_row.push(Cell::new(info.text().collect::<String>().as_str())),
-                3 => fifth_row.push(Cell::new(info.text().collect::<String>().as_str())),
-                4 => sixth_row.push(Cell::new(info.text().collect::<String>().as_str())),
-                5 => seventh_row.push(Cell::new(info.text().collect::<String>().as_str())),
-                6 => eighth_row.push(Cell::new(info.text().collect::<String>().as_str())),
+                0 => second_row.push(info_cell),
+                1 => third_row.push(info_cell),
+                2 => fourth_row.push(info_cell),
+                3 => fifth_row.push(info_cell),
+                4 => sixth_row.push(info_cell),
+                5 => seventh_row.push(info_cell),
+                6 => eighth_row.push(info_cell),
                 _ => (),
             }
         }

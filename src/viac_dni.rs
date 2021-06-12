@@ -16,7 +16,7 @@ pub fn get(document: &Html) {
         let teplota = element.select(&teplota_selector).next().unwrap();
         first_row.push(Cell::new(
             &format!(
-                "\x1b[0;34m{} {}\x1b[0m",
+                "\x1b[0;34m{} {}",
                 den.text().collect::<String>().trim(),
                 datum.text().collect::<String>().trim()
             )

@@ -11,13 +11,18 @@ mod viac_info;
 */
 
 fn main() {
+    let mut addition = "";
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("Error: An argument is required");
         return;
+    } else if args.len() == 3 {
+        if args[2] == "z" {
+            addition = "zajtra";
+        }
     }
 
-    if let Err(_) = get_weather(&args[1]) {
+    if let Err(_) = get_weather(&args[1], addition) {
         println!("Can't get the weather");
     }
 }
@@ -27,8 +32,11 @@ fn main() {
 // Just make it more readable
 // Improve file names
 
-pub fn get_weather(arg: &String) -> Result<(), Box<dyn std::error::Error>> {
-    let url = format!("https://pocasie.sme.sk/krajina/slovensko/{}/zajtra", arg);
+pub fn get_weather(arg: &String, addition: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let url = format!(
+        "https://pocasie.sme.sk/krajina/slovensko/{}/{}",
+        arg, addition
+    );
     let resp = attohttpc::get(url).send()?;
     let resp_text = resp.text()?;
     let document = Html::parse_document(resp_text.as_str());
@@ -36,8 +44,10 @@ pub fn get_weather(arg: &String) -> Result<(), Box<dyn std::error::Error>> {
     if let Some(_) = teraz::get(&document) {
         viac_info::get(&document);
         println!();
-        viac_dni::get(&document);
-        println!();
+        if addition == "" {
+            viac_dni::get(&document);
+            println!();
+        }
         dnes_info::get(&document);
     } else {
         println!("Can't get the weather");
